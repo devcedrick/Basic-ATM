@@ -1,0 +1,147 @@
+#include <stdio.h>
+#include <ctype.h>
+#include <time.h>
+#include <stdbool.h>
+
+double initialBalance = 1000;
+
+bool pinVerification (int passcode)
+{
+    // initialzing pin
+    int pin = 2015;
+    if (pin != passcode)
+    {
+        return false;
+    }
+    return true;
+}
+
+int selection (int value)
+{
+    
+    switch (value)
+    {
+        case 1: //Balance Checking
+            printf("\nAccount Balance: %.2lf\n\n", initialBalance);
+            break;
+        case 2: //Cash Withdrawal
+            int withdraw;
+            printf("\nEnter the amount you would like to withdraw: ");
+            scanf("%d", &withdraw);
+            float cashWithdrawal = (float)withdraw;
+            initialBalance = initialBalance - cashWithdrawal;
+             printf("Your New Balance is: %.2lf\n\n", initialBalance);
+
+            if (withdraw > initialBalance)
+            {
+                printf("You have an insufficient balance.\n");
+            }
+            break;
+        case 3: //Cash Deposit
+            int deposit;
+            printf("\nEnter the amount you want to deposit: ");
+            scanf("%d", &deposit);
+            initialBalance = initialBalance + deposit;
+            printf("Your New Balance is: %.2lf\n\n", initialBalance); 
+
+            if (deposit < 100)
+            {
+                printf("The bank only allows a minimum 0f 100 PHP of cash deposit.\n");
+                break;
+            }
+            float cashDeposit = (float)deposit;
+            initialBalance += cashDeposit;
+            break;
+        case 4: // Account Information
+            time_t currentTime;
+            struct tm *localTime;
+            time(&currentTime);
+            localTime = localtime(&currentTime);
+            printf("\nAccount Number: 123456\n");
+            printf("Account Name: User Chuchu\n");
+            printf("Account created on: %02d-%02d-%04d\n\n", localTime->tm_mon+1, localTime->tm_mday, localTime->tm_year+1900);
+            break;
+        default:
+            printf("Inavalid Selection!");
+    } 
+}
+
+int main (void)
+{
+    printf("\nWelcome to ATM!\n\n");
+
+    // Pin Verification
+    int enteredPin; 
+    printf("Enter your 4-digit PIN: ");
+    scanf("%d", &enteredPin);
+
+    if (!pinVerification(enteredPin))
+    {
+        printf("You entered a wrong PIN!\n\n");
+        return 1;
+    }
+
+        // Transactions
+    printf("\nPlease select the type of transaction you would like to perform by entering its corresponding value.\n");
+    printf("1. Check Balance\n");
+    printf("2. Cash Withdrawal\n");
+    printf("3. Cash Deposit\n");
+    printf("4. View Account Information\n");
+    printf("5. Cancel Transaction\n");
+
+    int selector;
+    printf("Transaction Type: ");
+    scanf("%d", &selector);
+
+    if (selector == 5)
+    {
+        printf ("\nThank you for using the ATM!");
+        return 0;
+    }
+
+    int selectionMain = selection(selector);
+    
+    for (int i=1; i < 15; i++)
+    {
+        
+        printf("Would you like to perform another transaction? \n");
+        printf("Type 'Y' if proceed. Otherwise, type 'N' if exit.\n");
+        char response;
+        printf("Enter your response: ");
+        scanf(" %c", &response);
+        char upperResponse = toupper(response);
+
+        if (upperResponse == 'Y')
+        {
+            // Transactions
+            printf("\nPlease select the type of transaction you would like to perform by entering its corresponding value.\n");
+            printf("1. Check Balance\n");
+            printf("2. Cash Withdrawal\n");
+            printf("3. Cash Deposit\n");
+            printf("4. View Account Information\n");
+            printf("5. Cancel Transaction\n");
+
+            printf("Transaction Type: ");
+            scanf("%d", &selector);
+
+            if (selector == 5)
+            {
+                printf ("\nThank you for using the ATM!");
+                return 0;
+            }
+            selection(selector);
+        }
+        else if (upperResponse == 'N')
+        {
+            break;
+        }
+        else 
+        {
+            printf("\nInvalid Response!");
+            continue;
+        }
+    }   
+    
+    printf("\nThank you for using our ATM.\n");
+    return 0;
+}
